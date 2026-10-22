@@ -1,0 +1,30 @@
+{
+  "name": "vias-seguras-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend (PWA) del Caso de Estudio 2: Reporte y seguimiento ciudadano de baches y daños viales",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5173"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "leaflet": "1.9.4",
+    "leaflet.heat": "0.2.0",
+    "leaflet.markercluster": "1.5.3",
+    "lucide-react": "0.460.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.28.0",
+    "web-vitals": "4.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.21"
+  },
+  "author": "Julian Moreno"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Vías Seguras · Reporte de daños viales",
+  "short_name": "Vías Seguras",
+  "description": "Reporta baches y daños viales y sigue su reparación.",
+  "lang": "es",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e293b",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Reportar un daño", "url": "/reportar" },
+    { "name": "Mis reportes", "url": "/mis-reportes" }
+  ]
+}
