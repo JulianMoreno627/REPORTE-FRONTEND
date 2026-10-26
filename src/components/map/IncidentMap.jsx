@@ -45,6 +45,7 @@ const IncidentMap = forwardRef(function IncidentMap({
 
   useImperativeHandle(ref, () => ({
     flyTo: (position, targetZoom = 17) => mapRef.current?.flyTo([position.lat, position.lng], targetZoom, { duration: 0.8 }),
+    setView: (position, targetZoom = 17) => mapRef.current?.setView([position.lat, position.lng], targetZoom),
     invalidateSize: () => mapRef.current?.invalidateSize(),
   }), []);
 

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, Layers, LocateFixed, MapPin, MapPinPlus, Plus, SearchX, Users, X } from 'lucide-react';
 import IncidentMap from '../components/map/IncidentMap.jsx';
@@ -130,7 +130,15 @@ export default function MapPage() {
     else toast.error('No pudimos obtener tu ubicación. Revisa el permiso del navegador.');
   };
 
-  const toggleLayer = (layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }));
+  useEffect(() => {
+    let active = true;
+    geolocation.locate().then((position) => {
+      if (active && position) mapRef.current?.setView(position, 16);
+    });
+    return () => { active = false; };
+  }, []);
+
+  const toggleLayer =(layer) => setLayers((current) => ({ ...current, [layer]: !current[layer] }));
 
   return (
     <div className="map-page">
@@ -205,7 +213,7 @@ export default function MapPage() {
       <div className="map-stage">
         <IncidentMap
           ref={mapRef}
-          center={cityCenter}
+          center={geolocation.position ?? cityCenter}
           incidents={items}
           heatPoints={heatPoints}
           heatGradient={heatmap.data?.gradient}
