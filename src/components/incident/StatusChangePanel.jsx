@@ -4,6 +4,7 @@ import { incidentsApi } from '../../api/endpoints.js';
 import { useToast } from '../../context/ToastContext.jsx';
 import { STATUS_META } from '../../utils/domain.js';
 import { Spinner } from '../ui/Feedback.jsx';
+import PhotoInput from '../report/PhotoInput.jsx';
 
 const NOTE_PLACEHOLDER = {
   IN_REVIEW: 'Ej.: Una cuadrilla visitará el punto esta semana.',
@@ -16,6 +17,7 @@ export default function StatusChangePanel({ incident, onChanged }) {
   const toast = useToast();
   const [target, setTarget] = useState(null);
   const [note, setNote] = useState('');
+  const [photo, setPhoto] = useState(null);
   const [saving, setSaving] = useState(false);
   const options = incident.nextStatuses ?? [];
 
@@ -37,10 +39,18 @@ export default function StatusChangePanel({ incident, onChanged }) {
     }
     setSaving(true);
     try {
-      const updated = await incidentsApi.changeStatus(incident.id, target, note.trim());
+      let updated = await incidentsApi.changeStatus(incident.id, target, note.trim());
+      if (photo) {
+        try {
+          updated = await incidentsApi.attachHistoryPhoto(updated.id, updated.history.length - 1, photo.blob);
+        } catch (error) {
+          toast.error(`El estado se guardó, pero la foto no se pudo subir: ${error.message}`);
+        }
+      }
       toast.success(`Se notificó a ${updated.reporterCount} ciudadano(s).`, { title: `Estado: ${updated.statusLabel}` });
       setTarget(null);
       setNote('');
+      setPhoto(null);
       onChanged?.(updated);
     } catch (error) {
       toast.error(error.message);
@@ -66,6 +76,19 @@ export default function StatusChangePanel({ incident, onChanged }) {
           <span className="field__label">Nota para los ciudadanos {target !== 'REJECTED' && <small>(opcional)</small>}</span>
           <textarea rows={3} maxLength={500} value={note} onChange={(event) => setNote(event.target.value)} placeholder={NOTE_PLACEHOLDER[target]} />
         </label>
+      )}
+      {target && (
+        <div className="field">
+          <span className="field__label">Foto del avance <small>(opcional)</small></span>
+          <PhotoInput
+            value={photo}
+            onChange={setPhoto}
+            onError={(message) => toast.error(message)}
+            title="Agrega una foto del avance"
+            hint="Los ciudadanos la verán en el seguimiento del reporte"
+            showGps={false}
+          />
+        </div>
       )}
       <button type="submit" className="button button--primary button--block" disabled={!target || saving}>
         {saving ? <Spinner size={16} /> : null} Actualizar y notificar

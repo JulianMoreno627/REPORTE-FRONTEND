@@ -5,7 +5,12 @@ import { formatBytes } from '../../utils/format.js';
 import { Badge } from '../ui/Badges.jsx';
 import { Spinner } from '../ui/Feedback.jsx';
 
-export default function PhotoInput({ value, onChange, onError }) {
+export default function PhotoInput({
+  value, onChange, onError,
+  title = 'Agrega una foto del daño',
+  hint = 'Ayuda a la alcaldía a verificar el reporte',
+  showGps = true,
+}) {
   const [processing, setProcessing] = useState(false);
   const [preview, setPreview] = useState(null);
 
@@ -50,15 +55,15 @@ export default function PhotoInput({ value, onChange, onError }) {
     const saved = Math.max(0, 1 - value.bytes / value.originalBytes);
     return (
       <div className="photo-preview">
-        <img src={preview} alt="Vista previa de la foto del daño" />
+        <img src={preview} alt="Vista previa de la foto" />
         <div className="photo-preview__info">
           <p><strong>{formatBytes(value.originalBytes)}</strong> → <strong>{formatBytes(value.bytes)}</strong>
             {saved > 0.05 && <span className="muted"> ({Math.round(saved * 100)} % menos datos)</span>}
           </p>
           <p className="muted small">{value.width} × {value.height} px</p>
-          {value.gps
+          {showGps && (value.gps
             ? <Badge tone="green"><MapPin size={12} aria-hidden="true" /> La foto tiene ubicación GPS</Badge>
-            : <Badge tone="gray">La foto no tiene ubicación GPS</Badge>}
+            : <Badge tone="gray">La foto no tiene ubicación GPS</Badge>)}
         </div>
         <button type="button" className="icon-button photo-preview__remove" onClick={() => onChange(null)} aria-label="Quitar foto">
           <Trash2 size={18} />
@@ -77,7 +82,7 @@ export default function PhotoInput({ value, onChange, onError }) {
       }}
     >
       <ImagePlus size={30} aria-hidden="true" />
-      <p><strong>Agrega una foto del daño</strong><br /><span className="muted small">Ayuda a la alcaldía a verificar el reporte</span></p>
+      <p><strong>{title}</strong><br /><span className="muted small">{hint}</span></p>
       <div className="photo-drop__actions">
         <label className="button button--secondary">
           <Camera size={18} aria-hidden="true" /> Tomar foto

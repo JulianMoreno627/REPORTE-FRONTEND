@@ -26,6 +26,7 @@ export const incidentsApi = {
   priorityQueue: (limit = 10, options) => api.get('/incidents/priority-queue', { ...options, query: { limit } }),
   detail: (id, options) => api.get(`/incidents/${id}`, options),
   changeStatus: (id, status, note) => api.patch(`/incidents/${id}/status`, { status, note }),
+  attachHistoryPhoto: (id, entry, blob) => api.post(`/incidents/${id}/history/${entry}/photo`, blob),
   heatmap: (bounds, options) => api.get('/heatmap', { ...options, query: { bbox: bboxParam(bounds) } }),
 };
 
