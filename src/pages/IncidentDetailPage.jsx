@@ -5,6 +5,7 @@ import PriorityMeter from '../components/incident/PriorityMeter.jsx';
 import StatusChangePanel from '../components/incident/StatusChangePanel.jsx';
 import StatusHistory from '../components/incident/StatusHistory.jsx';
 import StatusStepper from '../components/incident/StatusStepper.jsx';
+import AiInsight from '../components/report/AiInsight.jsx';
 import { CategoryIcon, PhotoCheckBadge, PriorityBadge, StatusBadge } from '../components/ui/Badges.jsx';
 import { ErrorState, PageLoader } from '../components/ui/Feedback.jsx';
 import { api } from '../api/client.js';
@@ -32,6 +33,7 @@ function ReportCard({ report, index, showCheck }) {
         <p className="muted small" title={formatDateTime(report.createdAt)}>{timeAgo(report.createdAt)}</p>
         {report.description && <p className="report-card__text">“{report.description}”</p>}
         {showCheck && <PhotoCheckBadge check={report.photoCheck} />}
+        <AiInsight analysis={report.aiAnalysis} reportedCategory={report.category} />
       </div>
     </li>
   );

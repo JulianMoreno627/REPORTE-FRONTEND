@@ -423,6 +423,16 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--f
 .timeline__photo { display: block; margin-top: 8px; max-width: 260px; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--line); }
 .timeline__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 
+.ai-insight {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 10px; padding: 10px 12px; text-align: left;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+}
+.ai-insight__title { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9rem; }
+.ai-insight__title .muted { margin-left: auto; font-weight: 400; }
+.ai-insight__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.ai-insight__reason { font-size: 0.88rem; color: var(--ink-2); }
+.ai-insight__warning { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--red-ink); }
+
 .incident-list { display: flex; flex-direction: column; gap: 6px; }
 .incident-item {
   width: 100%; display: flex; align-items: center; gap: 12px; text-align: left;

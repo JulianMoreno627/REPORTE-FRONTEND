@@ -48,4 +48,10 @@ export const PHOTO_CHECK_META = {
   NONE: { label: 'Sin foto', tone: 'gray', hint: '' },
 };
 
+export const AI_RISK_META = {
+  HIGH: { label: 'Riesgo alto', tone: 'red' },
+  MEDIUM: { label: 'Riesgo medio', tone: 'orange' },
+  LOW: { label: 'Riesgo bajo', tone: 'yellow' },
+};
+
 export const priorityColor = (incident) => PRIORITY_META[incident.priority?.level ?? 'NONE']?.color ?? '#64748b';

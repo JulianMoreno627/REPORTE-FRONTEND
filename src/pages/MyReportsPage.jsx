@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, ClipboardPen, CloudUpload, Map, Plus, Trash2, Users } from 'lucide-react';
 import StatusStepper from '../components/incident/StatusStepper.jsx';
+import { AiRiskBadge } from '../components/report/AiInsight.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { CategoryIcon, PhotoCheckBadge, StatusBadge } from '../components/ui/Badges.jsx';
 import { EmptyState, ErrorState, Skeleton } from '../components/ui/Feedback.jsx';
@@ -59,6 +60,7 @@ function ReportCard({ report }) {
           </p>
           {incident && <StatusStepper status={incident.status} compact />}
           <PhotoCheckBadge check={report.photoCheck} />
+          <AiRiskBadge analysis={report.aiAnalysis} />
         </div>
         <ChevronRight size={18} className="my-report__chevron" aria-hidden="true" />
       </Link>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { CircleCheckBig, CloudUpload, Merge } from 'lucide-react';
 import { PhotoCheckBadge, StatusBadge } from '../ui/Badges.jsx';
+import AiInsight from './AiInsight.jsx';
 
 export default function ReportResult({ result, onReset }) {
   if (result.queued) {
@@ -17,7 +18,7 @@ export default function ReportResult({ result, onReset }) {
     );
   }
 
-  const { grouped, message, incident, analysis, photoFailed } = result;
+  const { grouped, message, incident, report, analysis, photoFailed } = result;
   const Icon = grouped ? Merge : CircleCheckBig;
   return (
     <section className={`result-card${grouped ? ' result-card--grouped' : ''}`}>
@@ -31,6 +32,7 @@ export default function ReportResult({ result, onReset }) {
           {analysis && <PhotoCheckBadge check={analysis.photoCheck} />}
         </div>
       )}
+      <AiInsight analysis={analysis?.ai} reportedCategory={report?.category} />
       {photoFailed && <p className="notice notice--warning">El reporte quedó registrado, pero la foto no se pudo subir: {photoFailed}</p>}
       <p className="muted small">Te avisaremos cuando la alcaldía cambie el estado de este incidente.</p>
       <div className="result-card__actions">
