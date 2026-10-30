@@ -14,6 +14,7 @@ export const reportsApi = {
   create: (report) => api.post('/reports', report),
   createBatch: (reports) => api.post('/reports/batch', { reports }),
   attachPhoto: (reportId, blob) => api.post(`/reports/${reportId}/photo`, blob),
+  analyzePhoto: (blob) => api.post('/reports/photo-analysis', blob),
   mine: (options) => api.get('/reports/mine', options),
 };
 

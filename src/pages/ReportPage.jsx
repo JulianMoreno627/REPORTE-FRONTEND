@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Crosshair, Image, Info, LocateFixed, Merge, Send, TriangleAlert } from 'lucide-react';
+import { Crosshair, Image, Info, LocateFixed, Merge, Send, Sparkles, TriangleAlert } from 'lucide-react';
 import LocationPicker from '../components/map/LocationPicker.jsx';
 import CategoryPicker from '../components/report/CategoryPicker.jsx';
 import PhotoInput from '../components/report/PhotoInput.jsx';
+import AiSuggestion from '../components/report/AiSuggestion.jsx';
 import ReportResult from '../components/report/ReportResult.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
 import { Spinner } from '../components/ui/Feedback.jsx';
@@ -20,6 +21,7 @@ import { formatCoords, formatMeters } from '../utils/format.js';
 import { uuid } from '../utils/id.js';
 
 const MAX_DESCRIPTION = 500;
+const AI_IDLE = { status: 'idle', enabled: false, ai: null, applied: false };
 const NEARBY_SEARCH_METERS = 150;
 
 const SOURCE_LABEL = {
@@ -66,8 +68,11 @@ export default function ReportPage() {
   const [error, setError] = useState(null);
   const [showErrors, setShowErrors] = useState(false);
   const [result, setResult] = useState(null);
+  const [aiState, setAiState] = useState(AI_IDLE);
+  const categoryPicked = useRef(false);
+  const aiRequest = useRef(0);
 
-  const nearby = useNearbyIncidents(position, online);
+  const nearby =useNearbyIncidents(position, online);
   const nearest = useMemo(() => (position ? nearestIncident(position, nearby) : null), [position, nearby]);
   const willGroup = nearest && nearest.distance <= clusterRadiusMeters;
 
@@ -97,14 +102,43 @@ export default function ReportPage() {
     setSource(origin);
   };
 
+  const pickCategory = (code) => {
+    categoryPicked.current = true;
+    setCategory(code);
+  };
+
+  const analyzePhoto = async (blob) => {
+    const request = ++aiRequest.current;
+    setAiState({ ...AI_IDLE, status: 'analyzing', enabled: true });
+    let next;
+    try {
+      const { enabled, ai } = await reportsApi.analyzePhoto(blob);
+      const applied = Boolean(ai?.isRoad && ai.category && !categoryPicked.current);
+      next = { status: 'done', enabled, ai, applied };
+    } catch {
+      next = { status: 'done', enabled: true, ai: null, applied: false };
+    }
+    if (request !== aiRequest.current) return;
+    if (next.applied) setCategory(next.ai.category);
+    setAiState(next);
+  };
+
   const handlePhoto = (compressed) => {
     setPhoto(compressed);
     if (compressed?.gps && !position) choosePoint(compressed.gps, 'photo');
+    if (compressed && online) analyzePhoto(compressed.blob);
+    else {
+      aiRequest.current++;
+      setAiState(AI_IDLE);
+    }
   };
 
   const reset = () => {
     setResult(null);
     setCategory('');
+    categoryPicked.current = false;
+    aiRequest.current++;
+    setAiState(AI_IDLE);
     setDescription('');
     setPhoto(null);
     setError(null);
@@ -241,9 +275,12 @@ export default function ReportPage() {
             <div>
               <h2>¿Qué tipo de daño es?</h2>
               {showErrors && !category && <p className="field__error">Elige una opción.</p>}
+              {aiState.applied && category === aiState.ai?.category && (
+                <p className="ai-picked"><Sparkles size={14} aria-hidden="true" /> Seleccionado por IA a partir de tu foto</p>
+              )}
             </div>
           </header>
-          <CategoryPicker categories={categories} value={category} onChange={setCategory} />
+          <CategoryPicker categories={categories} value={category} onChange={pickCategory} />
 
           <fieldset className="field">
             <legend className="field__label">Tipo de vía</legend>
@@ -268,6 +305,7 @@ export default function ReportPage() {
             </div>
           </header>
           <PhotoInput value={photo} onChange={handlePhoto} onError={(message) => toast.error(message)} />
+          <AiSuggestion state={aiState} category={category} onApply={pickCategory} />
 
           <label className="field">
             <span className="field__label">Descripción <small>(opcional)</small></span>

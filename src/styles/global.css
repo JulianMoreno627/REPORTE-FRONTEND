@@ -433,6 +433,16 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--f
 .ai-insight__reason { font-size: 0.88rem; color: var(--ink-2); }
 .ai-insight__warning { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--red-ink); }
 
+.ai-suggestion {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; padding: 10px 12px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 0.9rem;
+}
+p.ai-suggestion { flex-direction: row; align-items: center; }
+.ai-suggestion--warning { color: var(--red-ink); }
+.ai-suggestion__head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.ai-suggestion__reason { color: var(--ink-2); font-size: 0.88rem; }
+.ai-picked { display: flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 0.85rem; color: var(--blue-ink); font-weight: 600; }
+
 .incident-list { display: flex; flex-direction: column; gap: 6px; }
 .incident-item {
   width: 100%; display: flex; align-items: center; gap: 12px; text-align: left;
