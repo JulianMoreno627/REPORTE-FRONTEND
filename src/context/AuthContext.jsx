@@ -55,6 +55,12 @@ export function AuthProvider({ children }) {
     return account;
   }, []);
 
+  const updateUser = useCallback((account) => {
+    storeUser(account);
+    setUser(account);
+    return account;
+  }, []);
+
   const value = useMemo(() => ({
     user,
     ready,
@@ -62,8 +68,9 @@ export function AuthProvider({ children }) {
     isOfficial: user?.role === 'OFFICIAL',
     login: async (credentials) => startSession(await authApi.login(credentials)),
     register: async (data) => startSession(await authApi.register(data)),
+    updateUser,
     logout,
-  }), [user, ready, startSession, logout]);
+  }), [user, ready, startSession, updateUser, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

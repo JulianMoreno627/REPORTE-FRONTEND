@@ -10,6 +10,13 @@ export const authApi = {
   me: (options) => api.get('/auth/me', options),
 };
 
+export const profileApi = {
+  update: (data) => api.patch('/profile', data),
+  changePassword: (data) => api.put('/profile/password', data),
+  uploadAvatar: (blob) => api.put('/profile/avatar', blob),
+  removeAvatar: () => api.delete('/profile/avatar'),
+};
+
 export const reportsApi = {
   create: (report) => api.post('/reports', report),
   createBatch: (reports) => api.post('/reports/batch', { reports }),

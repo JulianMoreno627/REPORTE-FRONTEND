@@ -13,6 +13,7 @@ const NotificationsPage = lazy(() => import('./pages/NotificationsPage.jsx'));
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'));
 const WelcomePage = lazy(() => import('./pages/WelcomePage.jsx'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage.jsx'));
 
 function ToWelcome() {
   const { state } = useLocation();
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="reportar" element={<ReportPage />} />
             <Route path="mis-reportes" element={<MyReportsPage />} />
             <Route path="notificaciones" element={<NotificationsPage />} />
+            <Route path="perfil" element={<ProfilePage />} />
             <Route element={<RequireOfficial />}>
               <Route path="panel" element={<AdminPage />} />
             </Route>

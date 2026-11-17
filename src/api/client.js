@@ -91,6 +91,8 @@ class ApiClient {
   get(path, options) { return this.request('GET', path, options); }
   post(path, body, options) { return this.request('POST', path, { ...options, body }); }
   patch(path, body, options) { return this.request('PATCH', path, { ...options, body }); }
+  put(path, body, options) { return this.request('PUT', path, { ...options, body }); }
+  delete(path, options) { return this.request('DELETE', path, options); }
 }
 
 export const api = new ApiClient(API_URL);

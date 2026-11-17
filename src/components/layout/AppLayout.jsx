@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Bell, ClipboardList, LayoutDashboard, LogOut, Map, Plus } from 'lucide-react';
+import { Bell, ClipboardList, LayoutDashboard, LogOut, Map, Plus, UserRound } from 'lucide-react';
+import Avatar from '../ui/Avatar.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useNotifications } from '../../context/NotificationsContext.jsx';
 import ConnectionBanner from './ConnectionBanner.jsx';
@@ -43,13 +44,13 @@ export default function AppLayout() {
             <Bell size={20} />
             {unread > 0 && <span className="counter">{unread > 9 ? '9+' : unread}</span>}
           </Link>
-          <div className="user-chip" title={user.email}>
-            <span className="user-chip__avatar" aria-hidden="true">{user.name.charAt(0).toUpperCase()}</span>
+          <Link to="/perfil" className="user-chip" title={`Mi perfil (${user.email})`} aria-label="Mi perfil">
+            <Avatar user={user} className="user-chip__avatar" />
             <span className="user-chip__text">
               <strong>{user.name.split(' ')[0]}</strong>
               <small>{user.roleLabel}</small>
             </span>
-          </div>
+          </Link>
           <button type="button" className="icon-button" onClick={logout} aria-label="Cerrar sesión" title="Cerrar sesión">
             <LogOut size={19} />
           </button>
@@ -71,7 +72,7 @@ export default function AppLayout() {
         <NavItem to="/notificaciones" icon={Bell}>
           Avisos{unread > 0 && <span className="counter counter--inline">{unread}</span>}
         </NavItem>
-        <button type="button" className="nav-link" onClick={logout}><LogOut size={18} aria-hidden="true" /><span>Salir</span></button>
+        <NavItem to="/perfil" icon={UserRound}>Perfil</NavItem>
       </nav>
     </div>
   );

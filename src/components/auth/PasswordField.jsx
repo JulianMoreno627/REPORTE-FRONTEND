@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
-export default function PasswordField({ value, onChange, autoComplete, minLength, hint, describedBy }) {
+export default function PasswordField({ value, onChange, autoComplete, minLength, hint, describedBy, label = 'Contraseña' }) {
   const id = useId();
   const [visible, setVisible] = useState(false);
   const [capsLock, setCapsLock] = useState(false);
@@ -11,7 +11,7 @@ export default function PasswordField({ value, onChange, autoComplete, minLength
 
   return (
     <div className="field">
-      <label className="field__label" htmlFor={id}>Contraseña</label>
+      <label className="field__label" htmlFor={id}>{label}</label>
       <span className="input-group">
         <input
           id={id}
