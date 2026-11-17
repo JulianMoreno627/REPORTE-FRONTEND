@@ -13,6 +13,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
 import '../styles/welcome.css';
 
 const HOME = '/mapa';
+const OFFICIAL_ONLY = ['/panel'];
 
 const MODES = [
   { value: 'login', label: 'Ingresar' },
@@ -21,7 +22,7 @@ const MODES = [
 
 export default function WelcomePage() {
   useDocumentTitle('Bienvenido');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
   const from = useLocation().state?.from;
@@ -36,7 +37,9 @@ export default function WelcomePage() {
     if (touched.current) headingRef.current?.focus();
   }, [step]);
 
-  if (isAuthenticated) return <Navigate to={from ?? HOME} replace />;
+  const destinationFor = (account) => (from && (account?.role === 'OFFICIAL' || !OFFICIAL_ONLY.some((path) => from.startsWith(path))) ? from : HOME);
+
+  if (isAuthenticated) return <Navigate to={destinationFor(user)} replace />;
 
   const go = (nextRole, nextMode) => {
     touched.current = true;
@@ -48,7 +51,7 @@ export default function WelcomePage() {
     const firstName = account.name.split(' ')[0];
     if (isNew) toast.success('Tu cuenta está lista.', { title: `Bienvenido, ${firstName}` });
     else toast.success(`Hola, ${firstName}.`);
-    navigate(from ?? HOME, { replace: true });
+    navigate(destinationFor(account), { replace: true });
   };
 
   const RoleIcon = role ? ROLES[role].icon : null;

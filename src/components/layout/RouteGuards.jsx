@@ -3,19 +3,22 @@ import { ShieldAlert } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { EmptyState, PageLoader } from '../ui/Feedback.jsx';
 
-export function RequireAuth() {
-  const { ready, isAuthenticated } = useAuth();
+function ToWelcome({ signedOut }) {
   const location = useLocation();
+  return <Navigate to="/" replace state={signedOut ? null : { from: location.pathname }} />;
+}
+
+export function RequireAuth() {
+  const { ready, isAuthenticated, signedOut } = useAuth();
   if (!ready) return <PageLoader label="Verificando tu sesión…" />;
-  if (!isAuthenticated) return <Navigate to="/" replace state={{ from: location.pathname }} />;
+  if (!isAuthenticated) return <ToWelcome signedOut={signedOut} />;
   return <Outlet />;
 }
 
 export function RequireOfficial() {
-  const { ready, isAuthenticated, isOfficial } = useAuth();
-  const location = useLocation();
+  const { ready, isAuthenticated, isOfficial, signedOut } = useAuth();
   if (!ready) return <PageLoader label="Verificando tu sesión…" />;
-  if (!isAuthenticated) return <Navigate to="/" replace state={{ from: location.pathname }} />;
+  if (!isAuthenticated) return <ToWelcome signedOut={signedOut} />;
   if (!isOfficial) {
     return (
       <div className="container">

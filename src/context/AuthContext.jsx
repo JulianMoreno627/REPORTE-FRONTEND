@@ -23,15 +23,20 @@ function storeUser(user) {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(readStoredUser);
   const [ready, setReady] = useState(!api.token || Boolean(readStoredUser()));
+  const [signedOut, setSignedOut] = useState(false);
 
-  const logout = useCallback(() => {
+  const endSession = useCallback((byUser) => {
     api.setToken(null);
     storeUser(null);
+    setSignedOut(byUser);
     setUser(null);
   }, []);
 
+  const logout = useCallback(() => endSession(true), [endSession]);
+  const expireSession = useCallback(() => endSession(false), [endSession]);
+
   useEffect(() => {
-    api.onUnauthorized(logout);
+    api.onUnauthorized(expireSession);
     if (!api.token) return undefined;
     const controller = new AbortController();
     authApi.me({ signal: controller.signal })
@@ -40,17 +45,18 @@ export function AuthProvider({ children }) {
         setUser(current);
       })
       .catch((error) => {
-        if (error.name !== 'AbortError' && error.isUnauthorized) logout();
+        if (error.name !== 'AbortError' && error.isUnauthorized) expireSession();
       })
       .finally(() => {
         if (!controller.signal.aborted) setReady(true);
       });
     return () => controller.abort();
-  }, [logout]);
+  }, [expireSession]);
 
   const startSession = useCallback(({ token, user: account }) => {
     api.setToken(token);
     storeUser(account);
+    setSignedOut(false);
     setUser(account);
     return account;
   }, []);
@@ -66,11 +72,12 @@ export function AuthProvider({ children }) {
     ready,
     isAuthenticated: Boolean(user),
     isOfficial: user?.role === 'OFFICIAL',
+    signedOut,
     login: async (credentials) => startSession(await authApi.login(credentials)),
     register: async (data) => startSession(await authApi.register(data)),
     updateUser,
     logout,
-  }), [user, ready, startSession, updateUser, logout]);
+  }), [user, ready, signedOut, startSession, updateUser, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
