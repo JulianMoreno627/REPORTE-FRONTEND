@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Bell, ClipboardList, LayoutDashboard, LogOut, Map, Plus, UserRound } from 'lucide-react';
 import Avatar from '../ui/Avatar.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useNotifications } from '../../context/NotificationsContext.jsx';
 import ConnectionBanner from './ConnectionBanner.jsx';
@@ -40,6 +41,7 @@ export default function AppLayout() {
           <Link to="/reportar" className="button button--accent topbar__cta">
             <Plus size={18} aria-hidden="true" /> <span>Reportar daño</span>
           </Link>
+          <ThemeToggle />
           <Link to="/notificaciones" className="icon-button topbar__bell" aria-label={`Notificaciones${unread ? `, ${unread} sin leer` : ''}`}>
             <Bell size={20} />
             {unread > 0 && <span className="counter">{unread > 9 ? '9+' : unread}</span>}

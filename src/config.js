@@ -7,3 +7,4 @@ export const PHOTO_TARGET_BYTES = 600 * 1024;
 
 export const TOKEN_STORAGE_KEY = 'vs.token';
 export const USER_STORAGE_KEY = 'vs.user';
+export const THEME_STORAGE_KEY = 'vs.theme';

@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import Logo from '../layout/Logo.jsx';
+import ThemeToggle from '../layout/ThemeToggle.jsx';
 
 export default function WelcomeHero() {
   return (
@@ -7,6 +8,7 @@ export default function WelcomeHero() {
       <div className="welcome__brand">
         <Logo size={36} />
         <span>Vías <strong>Seguras</strong></span>
+        <ThemeToggle className="icon-button welcome__theme" />
       </div>
 
       <div className="welcome__copy">

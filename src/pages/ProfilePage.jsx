@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Camera, KeyRound, LogOut, Save, Trash2, UserRound } from 'lucide-react';
+import { Camera, KeyRound, LogOut, Moon, Palette, Save, Sun, Trash2, UserRound } from 'lucide-react';
 import PasswordField from '../components/auth/PasswordField.jsx';
 import Avatar from '../components/ui/Avatar.jsx';
 import PageHeader from '../components/ui/PageHeader.jsx';
@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/Badges.jsx';
 import { Spinner } from '../components/ui/Feedback.jsx';
 import { profileApi } from '../api/endpoints.js';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
 import { compressPhoto } from '../services/imageService.js';
@@ -187,6 +188,33 @@ function PasswordSection({ onUpdated }) {
   );
 }
 
+function AppearanceSection() {
+  const { theme, setTheme } = useTheme();
+  const options = [
+    { value: 'light', label: 'Claro', icon: Sun },
+    { value: 'dark', label: 'Oscuro', icon: Moon },
+  ];
+  return (
+    <section className="form-section">
+      <header className="form-section__head">
+        <span className="form-section__step"><Palette size={16} aria-hidden="true" /></span>
+        <div>
+          <h2>Apariencia</h2>
+          <p>El modo claro es el predeterminado. Tu elección se guarda en este dispositivo.</p>
+        </div>
+      </header>
+      <div className="segmented" role="radiogroup" aria-label="Tema de la aplicación">
+        {options.map(({ value, label, icon: Icon }) => (
+          <button key={value} type="button" role="radio" aria-checked={theme === value}
+            className={theme === value ? 'is-active' : ''} onClick={() => setTheme(value)}>
+            <Icon size={16} aria-hidden="true" /> {label}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function ProfilePage() {
   useDocumentTitle('Mi perfil');
   const { user, isOfficial, updateUser, logout } = useAuth();
@@ -207,6 +235,7 @@ export default function ProfilePage() {
       <PhotoSection user={user} onUpdated={onUpdated} />
       <DataSection key={user.id} user={user} isOfficial={isOfficial} onUpdated={onUpdated} />
       <PasswordSection onUpdated={onUpdated} />
+      <AppearanceSection />
       <button type="button" className="button button--ghost profile-logout" onClick={logout}>
         <LogOut size={18} aria-hidden="true" /> Cerrar sesión
       </button>

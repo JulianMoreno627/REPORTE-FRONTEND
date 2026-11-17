@@ -19,6 +19,8 @@
 .welcome__brand { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; color: #fff; }
 .welcome__brand strong { color: var(--accent); }
 .welcome__brand .logo { border-radius: 9px; box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12); }
+.welcome__theme { margin-left: auto; color: #cbd5e1; }
+.welcome__theme:hover { background: rgb(255 255 255 / 0.08); color: #fff; }
 
 .welcome__copy { display: flex; flex-direction: column; gap: 14px; }
 .welcome__eyebrow {
